@@ -77,13 +77,18 @@ test('New file', async () => {
   await new Promise((resolve, reject) => {
     const timeout = setTimeout(() => reject('timeout'), TEST_TIMEOUT);
     watcher.once('change', file => {
-      assert.strictEqual(file.endsWith(path.sep + 'file.ext2'), true);
+      assert.strictEqual(file.endsWith(path.sep + 'file.js'), true);
       clearTimeout(timeout);
       flag = true;
       resolve();
     });
     setTimeout(() => {
-      fs.writeFile(file + 2, 'create', 'utf8', err => err && reject(err, 'Can not write file'));
+      fs.writeFile(
+        path.join(dir, 'file.js'),
+        'create',
+        'utf8',
+        err => err && reject(err, 'Can not write file'),
+      );
     }, WRITE_TIMEOUT);
   }).catch(err => console.error(err));
 
