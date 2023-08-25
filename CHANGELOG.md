@@ -6,7 +6,9 @@
 
 - Moved from Leadfisher
 - New <code>.close</code> and <code>.clear</code> methods
+  - Both in use for memory safety
 - New option <code>home</code>
+  - Added for long path replacements
 - New Tests
 - JSDoc
 

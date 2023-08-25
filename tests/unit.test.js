@@ -92,7 +92,7 @@ test('New file', async () => {
 
 test('Remove file', async () => {
   let flag = false;
-  const dir = path.join(CWD, 'tests/example_file_rename');
+  const dir = path.join(CWD, 'tests/example_file_remove');
   const file = path.join(dir, 'file.ext');
   fs.mkdirSync(dir);
   fs.writeFileSync(file, 'create', 'utf8');
