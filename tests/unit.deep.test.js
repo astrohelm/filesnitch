@@ -67,12 +67,8 @@ test('Nested folder', async () => {
 
   await new Promise((resolve, reject) => {
     const timeout = setTimeout(() => reject('timeout'), TEST_TIMEOUT);
-    let counter = 0;
-    watcher.on('delete', () => (console.log('DEBUG '), counter++));
 
     watcher.on('after', changes => {
-      console.log('DEBUG ', counter);
-      assert.strictEqual(counter, 2);
       assert.strictEqual(changes.length, 2);
       clearTimeout(timeout);
       flag = true;

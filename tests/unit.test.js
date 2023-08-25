@@ -68,15 +68,13 @@ test('Specific file', async () => {
 test('New file', async () => {
   let flag = false;
   const dir = path.join(CWD, 'tests/example_file_new');
-  const file = path.join(dir, 'file.ext');
   fs.mkdirSync(dir);
-  fs.writeFileSync(file, 'create', 'utf8');
   const watcher = new Watcher({ timeout: 200 });
   watcher.watch(dir);
 
   await new Promise((resolve, reject) => {
     const timeout = setTimeout(() => reject('timeout'), TEST_TIMEOUT);
-    watcher.once('change', file => {
+    watcher.on('change', file => {
       assert.strictEqual(file.endsWith(path.sep + 'file.js'), true);
       clearTimeout(timeout);
       flag = true;
