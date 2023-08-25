@@ -82,7 +82,9 @@ test('New file', async () => {
       flag = true;
       resolve();
     });
-    fs.writeFile(file + 2, 'create', 'utf8', err => err && reject(err, 'Can not write file'));
+    setTimeout(() => {
+      fs.writeFile(file + 2, 'create', 'utf8', err => err && reject(err, 'Can not write file'));
+    }, WRITE_TIMEOUT);
   }).catch(err => console.error(err));
 
   watcher.close();
