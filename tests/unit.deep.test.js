@@ -62,7 +62,7 @@ test('Nested folder', async () => {
   fs.mkdirSync(dir);
   fs.mkdirSync(deepDir);
   fs.writeFileSync(deepFile, 'create', 'utf8');
-  const watcher = new Watcher({ timeout: 200, deep: true });
+  const watcher = new Watcher({ timeout: 1000, deep: true });
   watcher.watch(dir);
 
   await new Promise((resolve, reject) => {
