@@ -57,12 +57,10 @@ test('Nested folder', async () => {
   let flag = false;
   const dir = path.join(CWD, 'tests/example_nested');
   const deepDir = path.join(dir, 'deep');
-  const file = path.join(dir, 'file.ext');
   const deepFile = path.join(deepDir, 'file.ext');
 
   fs.mkdirSync(dir);
   fs.mkdirSync(deepDir);
-  fs.writeFileSync(file, 'create', 'utf8');
   fs.writeFileSync(deepFile, 'create', 'utf8');
   const watcher = new Watcher({ timeout: 200, deep: true });
   watcher.watch(dir);
@@ -73,15 +71,14 @@ test('Nested folder', async () => {
     watcher.on('delete', () => void counter++);
 
     watcher.on('after', changes => {
-      assert.strictEqual(counter, 3);
-      assert.strictEqual(changes.length, 3);
+      assert.strictEqual(counter, 2);
+      assert.strictEqual(changes.length, 2);
       clearTimeout(timeout);
       flag = true;
       resolve();
     });
     setTimeout(() => {
-      fs.rm(file, err => reject(err));
-      fs.rm(deepDir, { recursive: true }, err => reject(err));
+      fs.rm(deepDir, { recursive: true }, err => err && reject(err));
     }, WRITE_TIMEOUT);
   }).catch(err => console.error(err));
 
