@@ -5,7 +5,7 @@
 ## [1.0.0][] - 2023-08-25
 
 - Moved from Leadfisher
-- New <code>.close</code> and <code>close</code> methods
+- New <code>.close</code> and <code>.clear</code> methods
 - New option <code>home</code>
 - New Tests
 - JSDoc
