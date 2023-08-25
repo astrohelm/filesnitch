@@ -77,6 +77,7 @@ test('New file', async () => {
   await new Promise((resolve, reject) => {
     const timeout = setTimeout(() => reject('timeout'), TEST_TIMEOUT);
     watcher.once('change', file => {
+      console.log(file, 123);
       assert.strictEqual(file.endsWith(path.sep + 'file.ext2'), true);
       clearTimeout(timeout);
       flag = true;

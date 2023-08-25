@@ -80,8 +80,8 @@ test('Nested folder', async () => {
       resolve();
     });
     setTimeout(() => {
-      fs.rmSync(file);
-      fs.rmSync(deepDir, { recursive: true });
+      fs.rm(file, err => reject(err));
+      fs.rm(deepDir, { recursive: true }, err => reject(err));
     }, WRITE_TIMEOUT);
   }).catch(err => console.error(err));
 
