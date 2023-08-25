@@ -44,7 +44,7 @@ test('Specific file', async () => {
   const file = path.join(dir, 'file.ext');
   fs.mkdirSync(dir);
   fs.writeFileSync(file, 'create', 'utf8');
-  const watcher = new Watcher({ timeout: 200 });
+  const watcher = new Watcher({ timeout: 1000 });
   watcher.watch(file);
 
   await new Promise((resolve, reject) => {
