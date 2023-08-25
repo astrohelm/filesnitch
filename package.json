@@ -1,24 +1,19 @@
 {
   "license": "MIT",
-  "version": "1.1.1",
+  "version": "1.0.0",
   "type": "commonjs",
-  "name": "astrohelm-workspace",
+  "name": "astrowatch",
   "homepage": "https://astrohelm.ru",
-  "description": "Astrohelm workspace example",
+  "description": "Astrohelm file system watcher",
   "author": "Alexander Ivanov <sashapop101@gmail.com>",
   "keywords": [
-    "nodejs",
-    "zero-dependencies",
-    "prettier",
-    "eslint",
-    "ts",
-    "workspace",
-    "example",
-    "preset",
-    "starter-kit",
-    "astrohelm",
+    "node.js",
     "javascript",
-    "typescript"
+    "astrohelm",
+    "fs",
+    "watcher",
+    "filesystem",
+    "zero-dependencies"
   ],
 
   "main": "index.js",
@@ -27,18 +22,18 @@
   "readmeFilename": "README.md",
   "engines": { "node": "18 || 19 || 20" },
   "browser": {},
-  "files": ["/dist", "/lib", "/types"],
+  "files": ["/lib", "/types"],
 
   "scripts": {
-    "test": "node --test && tsc",
+    "test": "node --test",
     "dev": "node index.js",
     "prettier:fix": "prettier --write \"**/*.{js,ts,json,html,cjs,md,yaml}\"",
     "eslint:fix": "eslint --fix \"**/*.{js,ts}\""
   },
 
-  "repository": { "type": "git", "url": "git+https://github.com/astrohelm/workspace.git" },
+  "repository": { "type": "git", "url": "git+https://github.com/astrohelm/astrowatcher.git" },
   "bugs": {
-    "url": "https://github.com/astrohelm/workspace/issues",
+    "url": "https://github.com/astrohelm/astrowatcher/issues",
     "email": "sashapop101@gmail.com"
   },
 
