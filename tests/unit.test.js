@@ -67,7 +67,7 @@ test('Specific file', async () => {
 
 test('New file', async () => {
   let flag = false;
-  const dir = path.join(CWD, 'tests/example_file_rename');
+  const dir = path.join(CWD, 'tests/example_file_new');
   const file = path.join(dir, 'file.ext');
   fs.mkdirSync(dir);
   fs.writeFileSync(file, 'create', 'utf8');
