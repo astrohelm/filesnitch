@@ -1,44 +1,40 @@
 'use strict';
 
-const fs = require('node:fs');
-const { join, sep } = require('node:path');
-const { access: accessible, schedular } = require('./lib');
+const READ_OPTS = { withFileTypes: true };
+const [fs, { join, sep }] = [require('node:fs'), require('node:path')];
+const { access: accessible, scheduler } = require('./lib');
 const { EventEmitter } = require('node:events');
 
-module.exports = function (options) {
+module.exports = function Watcher(options) {
   const [watchers, bridge] = [new Map(), new EventEmitter()];
-  const emit = schedular(options?.timeout, bridge.emit.bind(bridge));
+  const emit = scheduler(options?.timeout, bridge.emit.bind(bridge));
   const access = accessible.bind(null, options?.ignore ?? []);
-  const watch = (path, f) => access(f.name) && f.isDirectory() && bridge.watch(join(path, f.name));
-  const watchFiles = (path, files, handler = watch.bind(null, path)) => files.forEach(handler);
 
-  const setWatcher = path => {
-    if (watchers.has(path)) return;
-    const watcher = fs.watch(path, (_, filename) => {
-      const target = path.endsWith(sep + filename) ? path : join(path, filename);
-      if (!access(target)) return;
-      fs.stat(target, (err, stats) => {
-        const parsed = options?.home ? target.replace(options.home, '') : target;
-        if (err) return void (bridge.unwatch(target), emit('delete', parsed));
-        stats.isDirectory() && options?.deep && bridge.watch(target), emit('change', parsed);
-        return void 0;
-      });
+  const lookup = path => (err, files) =>
+    void (!err && files.forEach(f => f.isDirectory() && bridge.watch(join(path, f.name))));
+
+  const listener = path => (_, filename) => {
+    const target = path.endsWith(sep + filename) ? path : join(path, filename);
+    if (!access(target)) return;
+    fs.stat(target, (err, stats) => {
+      const parsed = options?.home ? target.replace(options.home, '') : target;
+      if (err) return void (bridge.unwatch(target), emit('delete', parsed));
+      stats.isDirectory() && options?.deep && fs.readdir(target, READ_OPTS, lookup(path));
+      return void emit('change', parsed);
     });
-    watchers.set(path, watcher);
   };
 
-  bridge.close = () => void (bridge.clear(), bridge.removeAllListeners());
-  bridge.clear = () => void (watchers.forEach(watcher => watcher.close()), watchers.clear());
-  bridge.unwatch = path => void (watchers.get(path)?.close(), watchers.delete(path));
+  bridge.close = () => (bridge.clear(), bridge.removeAllListeners(), bridge);
+  bridge.clear = () => (watchers.forEach(watcher => watcher.close()), watchers.clear(), bridge);
+  bridge.unwatch = path => (watchers.get(path)?.close(), watchers.delete(path), bridge);
   bridge.watch = path => {
-    if (watchers.has(path)) return;
+    if (watchers.has(path) || !access(path)) return bridge;
     fs.stat(path, (err, stats) => {
-      if (err) return;
-      setWatcher(path);
-      if (!stats.isDirectory() || !options?.deep) return;
-      fs.readdir(path, { withFileTypes: true }, (err, files) => !err && watchFiles(path, files));
+      if (err || watchers.has(path)) return;
+      watchers.set(path, fs.watch(path, listener(path)));
+      stats.isDirectory() && options?.deep && fs.readdir(path, READ_OPTS, lookup(path));
     });
+    return bridge;
   };
-
   return bridge;
 };
