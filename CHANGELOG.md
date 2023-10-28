@@ -2,6 +2,10 @@
 
 ## [Unreleased][unreleased]
 
+## [1.2.0][] - 2023-10-28
+
+- Prevent unexpected behaviour
+
 ## [1.1.0][] - 2023-10-26
 
 - Methods chaining
