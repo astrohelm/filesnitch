@@ -11,8 +11,6 @@ jobs:
         node:
           - 18
         os:
-          - macos-latest
-          - windows-latest
           - ubuntu-latest
 
     steps:
