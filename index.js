@@ -10,14 +10,14 @@ module.exports.default = Watcher;
 const READ_OPTS = { withFileTypes: true };
 Object.setPrototypeOf(Watcher.prototype, EventEmitter.prototype);
 function Watcher(options = {}) {
-  EventEmitter.call(this);
+  if (!new.target) return new Watcher(options);
   const { timeout, ignore = [], home, deep } = options;
   const access = accessible.bind(null, [...ignore]);
 
   const lookup = path => (err, files) =>
     void (!err && files.forEach(f => f.isDirectory() && this.watch(join(path, f.name))));
 
-  const emit = scheduler(timeout, this.emit.bind(this));
+  const emit = scheduler(this.emit.bind(this), timeout);
   const listener = path => (_, filename) => {
     const target = path.endsWith(sep + filename) ? path : join(path, filename);
     if (!access(target)) return;
@@ -30,8 +30,9 @@ function Watcher(options = {}) {
   };
 
   const watchers = new Map();
+  EventEmitter.call(this);
   this.close = () => (this.clear(), this.removeAllListeners(), this);
-  this.clear = () => (watchers.forEach(watcher => watcher.close()), watchers.clear(), this);
+  this.clear = () => (watchers.forEach(watcher => void watcher.close()), watchers.clear(), this);
   this.unwatch = path => (watchers.get(path)?.close(), watchers.delete(path), this);
   this.watch = path => {
     if (watchers.has(path) || !access(path)) return this;
