@@ -1,46 +1,73 @@
 'use strict';
 
-const { access: accessible, scheduler } = require('./lib');
+const { access, scheduler } = require('./lib');
 const { stat, readdir, watch } = require('node:fs');
 const { EventEmitter } = require('node:events');
 const { join, sep } = require('node:path');
 module.exports = Watcher;
 module.exports.default = Watcher;
 
-const READ_OPTS = { withFileTypes: true };
 Object.setPrototypeOf(Watcher.prototype, EventEmitter.prototype);
+const READ_OPTS = { withFileTypes: true };
+const kWatchers = Symbol('watchers');
+const kListener = Symbol('listener');
+const kOptions = Symbol('options');
+const kLookup = Symbol('lookup');
+const kEmit = Symbol('emit');
+
 function Watcher(options = {}) {
   if (!new.target) return new Watcher(options);
   const { timeout, ignore = [], home, deep } = options;
-  const access = accessible.bind(null, [...ignore]);
+  EventEmitter.call(this);
+  this[kWatchers] = new Map();
+  this[kEmit] = scheduler(this, timeout);
+  this[kOptions] = { timeout, ignore, home, deep };
+}
 
-  const lookup = path => (err, files) =>
-    void (!err && files.forEach(f => f.isDirectory() && this.watch(join(path, f.name))));
+Watcher.prototype.watch = function (path) {
+  const { [kWatchers]: watchers, [kOptions]: options } = this;
+  const { deep, ignore } = options;
+  if (watchers.has(path) || !access(ignore, path)) return this;
+  stat(path, (err, stats) => {
+    if (err || watchers.has(path)) return;
+    watchers.set(path, watch(path, this[kListener](path)));
+    stats.isDirectory() && deep && readdir(path, READ_OPTS, this[kLookup](path));
+  });
+  return this;
+};
 
-  const emit = scheduler(this.emit.bind(this), timeout);
-  const listener = path => (_, filename) => {
+Watcher.prototype.unwatch = function (path) {
+  const watchers = this[kWatchers];
+  watchers.get(path)?.close(), watchers.delete(path);
+  return this;
+};
+
+Watcher.prototype.close = function () {
+  this.clear(), this.removeAllListeners();
+  return this;
+};
+
+Watcher.prototype.clear = function () {
+  const watchers = this[kWatchers];
+  watchers.forEach(watcher => void watcher.close());
+  return watchers.clear(), this;
+};
+
+Watcher.prototype[kLookup] = function (path) {
+  const lookup = file => void (file.isDirectory() && this.watch(join(path, file.name)));
+  return (err, files) => void (!err && files.forEach(lookup));
+};
+
+Watcher.prototype[kListener] = function (path) {
+  const { home, deep, ignore } = this[kOptions];
+  return (_, filename) => {
     const target = path.endsWith(sep + filename) ? path : join(path, filename);
-    if (!access(target)) return;
+    if (!access(ignore, target)) return;
     stat(target, (err, stats) => {
       const parsed = home ? target.replace(home, '') : target;
-      if (err) return void (this.unwatch(target), emit('delete', parsed));
-      stats.isDirectory() && deep && readdir(target, READ_OPTS, lookup(path));
-      return void emit('change', parsed);
+      if (err) return void (this.unwatch(target), this[kEmit]('delete', parsed));
+      stats.isDirectory() && deep && readdir(target, READ_OPTS, this[kLookup](path));
+      return void this[kEmit]('change', parsed);
     });
   };
-
-  const watchers = new Map();
-  EventEmitter.call(this);
-  this.close = () => (this.clear(), this.removeAllListeners(), this);
-  this.clear = () => (watchers.forEach(watcher => void watcher.close()), watchers.clear(), this);
-  this.unwatch = path => (watchers.get(path)?.close(), watchers.delete(path), this);
-  this.watch = path => {
-    if (watchers.has(path) || !access(path)) return this;
-    stat(path, (err, stats) => {
-      if (err || watchers.has(path)) return;
-      watchers.set(path, watch(path, listener(path)));
-      stats.isDirectory() && deep && readdir(path, READ_OPTS, lookup(path));
-    });
-    return this;
-  };
-}
+};

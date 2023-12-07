@@ -2,6 +2,11 @@
 
 ## [Unreleased][unreleased]
 
+## [1.5.0][] - 2023-12-07
+
+- Code perfomance improvements
+- Symbolic keywords for isolation
+
 ## [1.4.0][] - 2023-12-05
 
 - Code quality improvements
