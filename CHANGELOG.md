@@ -2,9 +2,17 @@
 
 ## [Unreleased][unreleased]
 
+## [1.6.0][] - 2023-12-10
+
+- Code quality improvements
+- Static method watch (fp friendly)
+- Delete event renamed to unlink
+- More control over watcher with symbols
+- Updated packages
+
 ## [1.5.0][] - 2023-12-07
 
-- Code perfomance improvements
+- Code performance improvements
 - Symbolic keywords for isolation
 
 ## [1.4.0][] - 2023-12-05
@@ -44,7 +52,10 @@
 - New Tests
 - JSDoc
 
-[unreleased]: https://github.com/astrohelm/filesnitch/compare/v1.4.0...HEAD
+[unreleased]: https://github.com/astrohelm/filesnitch/compare/v1.6.0...HEAD
+[1.6.0]: https://github.com/astrohelm/filesnitch/compare/v1.5.0...v1.6.0
+[1.5.0]: https://github.com/astrohelm/filesnitch/compare/v1.4.0...v1.5.0
+[1.4.0]: https://github.com/astrohelm/filesnitch/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/astrohelm/filesnitch/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/astrohelm/filesnitch/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/astrohelm/filesnitch/compare/v1.1.0...v1.2.0

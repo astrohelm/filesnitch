@@ -45,6 +45,11 @@ export = class Watcher extends EventEmitter {
    */
   on(event: Events, handler: (...args: any[]) => void): EventEmitter;
   /**
+   * @example <caption>Allow you to watch file and directories</caption>
+   * Snitch.watch('./tests').watch('./somefile.js');
+   */
+  static watch(path: string, options?: Options): Watcher;
+  /**
    * @description Observe new path
    * @example <caption>Allow you to watch file and directories</caption>
    * const snitch = new Snitch();
@@ -83,4 +88,19 @@ export = class Watcher extends EventEmitter {
    * snitch.emit('change', 'Hello World!'); // No stdout
    */
   close(): Watcher;
+  /**
+   * @example <caption>Symbols for hidden properties</caption>
+   * @warning You should know what are you doing
+   * const snitch = new Snitch();
+   * const watchers = script[Snitch.symbols.kWatchers]; // Access to watchers.
+   * const options = script[Snitch.symbols.kOptions]; // Access to options.
+   * const emit = script[Snitch.symbols.kEmit]; // Access to scheduled emit function.
+   */
+  static symbols: {
+    kEmit: symbol;
+    kListener: symbol;
+    kLookup: symbol;
+    kOptions: symbol;
+    kWatchers: symbol;
+  };
 };
