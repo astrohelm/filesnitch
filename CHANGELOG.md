@@ -8,6 +8,7 @@
 - Static method watch (fp friendly)
 - Delete event renamed to unlink
 - More control over watcher with symbols
+- Rewritten to class syntax
 - Updated packages
 
 ## [1.5.0][] - 2023-12-07
