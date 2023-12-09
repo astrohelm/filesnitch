@@ -22,10 +22,11 @@ const snitch = new Snitch({
   deep: false, // Include nested directories
   home: process.cwd(), // Removes root path from emits, Warning: ignore will work on full paths
 });
+
 snitch.watch('/home/user/Downloads').watch('/home/user/Documents');
 snitch.on('before', updates => console.log({ before: updates }));
 snitch.on('change', path => console.log({ changed: path }));
-snitch.on('delete', path => console.log({ deleted: path }));
+snitch.on('unlink', path => console.log({ deleted: path }));
 snitch.on('after', updates => console.log({ after: updates }));
 ```
 

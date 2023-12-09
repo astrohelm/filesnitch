@@ -106,7 +106,7 @@ test('Remove file', async () => {
 
   await new Promise((resolve, reject) => {
     const timeout = setTimeout(() => reject('timeout'), TEST_TIMEOUT);
-    watcher.once('delete', file => {
+    watcher.once('unlink', file => {
       assert.strictEqual(file.endsWith(path.sep + 'file.ext'), true);
       clearTimeout(timeout);
       flag = true;
