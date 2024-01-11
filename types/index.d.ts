@@ -88,19 +88,4 @@ export = class Watcher extends EventEmitter {
    * snitch.emit('change', 'Hello World!'); // No stdout
    */
   close(): Watcher;
-  /**
-   * @example <caption>Symbols for hidden properties</caption>
-   * @warning You should know what are you doing
-   * const snitch = new Snitch();
-   * const watchers = script[Snitch.symbols.kWatchers]; // Access to watchers.
-   * const options = script[Snitch.symbols.kOptions]; // Access to options.
-   * const emit = script[Snitch.symbols.kEmit]; // Access to scheduled emit function.
-   */
-  static symbols: {
-    kEmit: symbol;
-    kListener: symbol;
-    kLookup: symbol;
-    kOptions: symbol;
-    kWatchers: symbol;
-  };
 };

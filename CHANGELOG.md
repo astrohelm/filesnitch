@@ -2,6 +2,12 @@
 
 ## [Unreleased][unreleased]
 
+## [1.7.0][] - 2024-01-14
+
+- Removed symbolic properties
+- Packages update
+- Grammar fixes
+
 ## [1.6.0][] - 2023-12-10
 
 - Code quality improvements
@@ -30,7 +36,7 @@
 
 ## [1.2.0][] - 2023-10-28
 
-- Prevent unexpected behaviour
+- Prevent unexpected behavior
 
 ## [1.1.0][] - 2023-10-26
 
@@ -53,7 +59,8 @@
 - New Tests
 - JSDoc
 
-[unreleased]: https://github.com/astrohelm/filesnitch/compare/v1.6.0...HEAD
+[unreleased]: https://github.com/astrohelm/filesnitch/compare/v1.7.0...HEAD
+[1.7.0]: https://github.com/astrohelm/filesnitch/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/astrohelm/filesnitch/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/astrohelm/filesnitch/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/astrohelm/filesnitch/compare/v1.3.0...v1.4.0
