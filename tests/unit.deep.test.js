@@ -69,11 +69,13 @@ test('Nested folder', async () => {
     const timeout = setTimeout(() => reject('timeout'), TEST_TIMEOUT);
 
     watcher.on('after', changes => {
+      console.log(changes, changes.length);
       assert.strictEqual(changes.length, 1);
       clearTimeout(timeout);
       flag = true;
       resolve();
     });
+
     setTimeout(() => {
       fs.rm(deepFile, err => err && reject(err));
     }, WRITE_TIMEOUT);
