@@ -9,6 +9,7 @@
 - Removed private fields -> decomposition to utils
 - Updated packages
 - Scheduler as self-entity -> can be removed by astropack scheduler in the future
+- Fixed bug with nested updates
 
 ## [1.7.0][] - 2024-01-14
 
