@@ -7,7 +7,7 @@ const test = require('node:test');
 const assert = require('node:assert');
 
 const CWD = process.cwd();
-const TEST_TIMEOUT = 2000;
+const TEST_TIMEOUT = 1000;
 const WRITE_TIMEOUT = 500;
 const cleanup = dir => fs.rmSync(dir, { recursive: true, force: true });
 
