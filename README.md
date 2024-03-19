@@ -6,6 +6,11 @@
  Deduplicate events with debounce <br/>
 </p>
 
+> [!WARNING]
+>
+> Macos can emit directory events if nested files were removed / added. This behavior can be
+> different on each OS. As for Linux ecosystem, in most distributions - we missing this behavior.
+
 <h2 align="center">Installation</h2>
 
 ```bash
