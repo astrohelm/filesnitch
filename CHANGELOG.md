@@ -2,6 +2,20 @@
 
 ## [Unreleased][unreleased]
 
+## [2.0.0][] - 2024-07-07
+
+### Major update
+
+- Switch from ignore list to filter function.
+- Restartable scheduler, allows to flush events in sync way before finish.
+- New scheduler events: ready, close, event, unlink, update, new.
+- New event parameter: details, available with update and new events.
+- New synchronous methods for snitch: flush, watchSync, open, close, \_schedule, ref, unref.
+- Callbacks for watch methods.
+- Drop support of NodeJS < 22.
+- Documentation enhancement.
+- Packages update.
+
 ## [1.8.1][] - 2024-03-19
 
 - Eslint bug fix
@@ -75,7 +89,8 @@
 - New Tests
 - JSDoc
 
-[unreleased]: https://github.com/astrohelm/filesnitch/compare/v1.8.1...HEAD
+[unreleased]: https://github.com/astrohelm/filesnitch/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/astrohelm/filesnitch/compare/v1.8.1...v2.0.0
 [1.8.1]: https://github.com/astrohelm/filesnitch/compare/v1.8.0...v1.8.1
 [1.8.0]: https://github.com/astrohelm/filesnitch/compare/v1.7.0...v1.8.0
 [1.7.0]: https://github.com/astrohelm/filesnitch/compare/v1.6.0...v1.7.0

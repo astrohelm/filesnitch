@@ -22,7 +22,7 @@
   "types": "types/index.d.ts",
   "packageManager": "npm@9.6.4",
   "readmeFilename": "README.md",
-  "engines": { "node": ">= 18" },
+  "engines": { "node": ">= 22" },
   "files": ["/lib", "/types"],
 
   "scripts": {
@@ -41,7 +41,7 @@
   "devDependencies": {
     "@types/node": "^20.11.30",
     "eslint": "^8.57.0",
-    "eslint-config-astrohelm": "^1.4.0",
+    "eslint-config-astrohelm": "^1.5.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-prettier": "^5.1.3",
