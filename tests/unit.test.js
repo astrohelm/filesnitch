@@ -108,19 +108,19 @@ test('[Events] debounce + unlink/event', async () => {
   await wait(name => fsp.unlink(path.join(dirLocation, name)));
 
   const result = await new Promise((resolve, reject) => {
-    setTimeout(reject, 1000);
+    setTimeout(() => reject('Timeout'), 1000);
     snitch.on('event', (path, event, details) => {
-      if (typeof details !== 'object') reject();
-      if (typeof path !== 'string') reject();
-      if (path.includes('ignore')) reject();
-      if (event !== 'unlink') reject();
+      if (typeof details !== 'object') reject('Invalid typeof details');
+      if (typeof path !== 'string') reject('Bad path: ' + path);
+      if (path.includes('ignore')) reject('Filter is not working');
+      if (event !== 'unlink') reject('Wrong event: ' + event);
       resolve();
     });
-  }).then(...[() => true, () => false]);
+  }).then(...[e => [true, e], e => [false, e]]);
 
   snitch.clear().removeAllListeners();
   await fsp.rm(dirLocation, { recursive: true, force: true });
-  assert(result);
+  if (!result[0]) throw new Error(result[1]);
 });
 
 test('[Events] debounce + update/event', async () => {
@@ -136,19 +136,19 @@ test('[Events] debounce + update/event', async () => {
   await wait(name => fsp.writeFile(path.join(dirLocation, name), '1', 'utf8'));
 
   const result = await new Promise((resolve, reject) => {
-    setTimeout(reject, 1000);
+    setTimeout(() => reject('Timeout'), 1000);
     snitch.on('event', (path, event, details) => {
-      if (typeof details !== 'object') reject();
-      if (typeof path !== 'string') reject();
-      if (path.includes('ignore')) reject();
-      if (event !== 'update') reject();
+      if (typeof details !== 'object') reject('Invalid typeof details');
+      if (typeof path !== 'string') reject('Bad path: ' + path);
+      if (path.includes('ignore')) reject('Filter is not working');
+      if (event !== 'update') reject('Wrong event: ' + event);
       resolve();
     });
-  }).then(...[() => true, () => false]);
+  }).then(...[e => [true, e], e => [false, e]]);
 
   snitch.clear().removeAllListeners();
   await fsp.rm(dirLocation, { recursive: true, force: true });
-  assert(result);
+  if (!result[0]) throw new Error(result[1]);
 });
 
 test('[Events] debounce + new/event', async () => {
@@ -163,19 +163,19 @@ test('[Events] debounce + new/event', async () => {
   await wait(name => fsp.writeFile(path.join(dirLocation, name), '', 'utf8'));
 
   const result = await new Promise((resolve, reject) => {
-    setTimeout(reject, 1000);
+    setTimeout(() => reject('Timeout'), 1000);
     snitch.on('event', (path, event, details) => {
-      if (typeof details !== 'object') reject();
-      if (typeof path !== 'string') reject();
-      if (path.includes('ignore')) reject();
-      if (event !== 'new') reject();
+      if (typeof details !== 'object') reject('Invalid typeof details');
+      if (typeof path !== 'string') reject('Bad path: ' + path);
+      if (path.includes('ignore')) reject('Filter is not working');
+      if (event !== 'new') reject('Wrong event: ' + event);
       resolve();
     });
-  }).then(...[() => true, () => false]);
+  }).then(...[e => [true, e], e => [false, e]]);
 
   snitch.clear().removeAllListeners();
   await fsp.rm(dirLocation, { recursive: true, force: true });
-  assert(result);
+  if (!result[0]) throw new Error(result[1]);
 });
 
 test('[Events] callback', async () => {
@@ -185,20 +185,21 @@ test('[Events] callback', async () => {
   await fsp.mkdir(dirLocation);
 
   const result = await new Promise((resolve, reject) => {
-    setTimeout(reject, 1000);
+    setTimeout(() => reject('Timeout'), 1000);
     snitch.watchSync(dirLocation, (event, path, details) => {
-      if (typeof details !== 'object') reject();
-      if (typeof path !== 'string') reject();
-      if (path.includes('ignore')) reject();
-      if (event === 'new') resolve();
+      if (typeof details !== 'object') reject('Invalid typeof details');
+      if (typeof path !== 'string') reject('Bad path: ' + path);
+      if (path.includes('ignore')) reject('Filter is not working');
+      if (event !== 'new') reject('Wrong event: ' + event);
+      resolve();
     });
     fsp.writeFile(path.join(dirLocation, 'file1.ignore.ext'), '', 'utf8');
     fsp.writeFile(path.join(dirLocation, 'file2.ext'), '', 'utf8');
-  }).then(...[() => true, () => false]);
+  }).then(...[e => [true, e], e => [false, e]]);
 
   snitch.clear().removeAllListeners();
   await fsp.rm(dirLocation, { recursive: true, force: true });
-  assert(result);
+  if (!result[0]) throw new Error(result[1]);
 });
 
 test('[Events] before/after/event', async () => {
@@ -213,7 +214,7 @@ test('[Events] before/after/event', async () => {
   await wait(name => fsp.writeFile(path.join(dirLocation, name), '', 'utf8'));
 
   const result = await new Promise((resolve, reject) => {
-    setTimeout(reject, 1000);
+    setTimeout(() => reject('Timeout'), 1000);
     var count = 0;
     var eventCount = 0;
     const res = (c = ++count) => c === 3 && resolve();
@@ -248,11 +249,11 @@ test('[Events] before/after/event', async () => {
       if (packet[0][1][0] !== 'new') reject();
       res();
     });
-  }).then(...[() => true, () => false]);
+  }).then(...[e => [true, e], e => [false, e]]);
 
   snitch.clear().removeAllListeners();
   await fsp.rm(dirLocation, { recursive: true, force: true });
-  assert(result);
+  if (!result[0]) throw new Error(result[1]);
 });
 
 test('[Events] recursive', async () => {
@@ -269,16 +270,16 @@ test('[Events] recursive', async () => {
   await wait(name => fsp.writeFile(path.join(nestedLocation, name), '', 'utf8'));
 
   const result = await new Promise((resolve, reject) => {
-    setTimeout(reject, 1000);
+    setTimeout(() => reject('Timeout'), 1000);
     var count = 0;
     snitch.on('event', (path, event) => {
       if (!path.includes('nested')) reject();
       if (event === 'new') count++;
       if (count === 2) resolve();
     });
-  }).then(...[() => true, () => false]);
+  }).then(...[e => [true, e], e => [false, e]]);
 
   snitch.clear().removeAllListeners();
   await fsp.rm(dirLocation, { recursive: true, force: true });
-  assert(result);
+  if (!result[0]) throw new Error(result[1]);
 });
