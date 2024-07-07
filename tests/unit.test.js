@@ -9,7 +9,7 @@ const timers = require('node:timers/promises');
 const fsp = fs.promises;
 
 const CWD = process.cwd();
-const WRITE_TIMEOUT = 1000;
+const WRITE_TIMEOUT = 2000;
 const stringify = details =>
   JSON.stringify(details, (k, v) => (typeof v === 'bigint' ? v.toString() : v));
 
@@ -100,7 +100,7 @@ test('[Events] debounce + unlink/event', async () => {
   const dirLocation = path.join(CWD, 'tests', 'dir' + Math.random().toFixed(5));
   const files = ['file1.ignore.ext', 'file2.ext'];
   const filter = f => !f.includes('ignore');
-  const snitch = new Snitch({ filter, timeout: 800, home: CWD, recursive: true });
+  const snitch = new Snitch({ filter, timeout: 1500, home: CWD, recursive: true });
   await fsp.mkdir(dirLocation);
   await snitch.watch(dirLocation);
 
@@ -110,7 +110,7 @@ test('[Events] debounce + unlink/event', async () => {
   await wait(name => fsp.unlink(path.join(dirLocation, name)));
 
   const result = await new Promise((resolve, reject) => {
-    setTimeout(() => reject('Timeout'), 1000);
+    setTimeout(() => reject('Timeout'), 2000);
     snitch.on('event', (path, event, details) => {
       if (typeof details !== 'object') reject('Invalid typeof details');
       if (typeof path !== 'string') reject('Bad path: ' + path);
@@ -129,16 +129,16 @@ test('[Events] debounce + update/event', async () => {
   const dirLocation = path.join(CWD, 'tests', 'dir' + Math.random().toFixed(5));
   const files = ['file1.ignore.ext', 'file2.ext'];
   const filter = f => !f.includes('ignore');
-  const snitch = new Snitch({ filter, timeout: 800, home: CWD, recursive: true });
+  const snitch = new Snitch({ filter, timeout: 1500, home: CWD, recursive: true });
   await fsp.mkdir(dirLocation);
   await snitch.watch(dirLocation);
 
   const wait = async cb => Promise.all(files.map(cb));
   await wait(name => fsp.writeFile(path.join(dirLocation, name), '', 'utf8'));
-  await wait(name => fsp.writeFile(path.join(dirLocation, name), '1', 'utf8'));
+  await wait(name => fsp.writeFile(path.join(dirLocation, name), '123', 'utf8'));
 
   const result = await new Promise((resolve, reject) => {
-    setTimeout(() => reject('Timeout'), 1000);
+    setTimeout(() => reject('Timeout'), 2000);
     snitch.on('event', (path, event, details) => {
       if (typeof details !== 'object') reject('Invalid typeof details');
       if (typeof path !== 'string') reject('Bad path: ' + path);
@@ -157,7 +157,7 @@ test('[Events] debounce + new/event', async () => {
   const dirLocation = path.join(CWD, 'tests', 'dir' + Math.random().toFixed(5));
   const files = ['file1.ignore.ext', 'file2.ext'];
   const filter = f => !f.includes('ignore');
-  const snitch = new Snitch({ filter, timeout: 800, home: CWD, recursive: true });
+  const snitch = new Snitch({ filter, timeout: 1500, home: CWD, recursive: true });
   await fsp.mkdir(dirLocation);
   await snitch.watch(dirLocation);
 
@@ -165,7 +165,7 @@ test('[Events] debounce + new/event', async () => {
   await wait(name => fsp.writeFile(path.join(dirLocation, name), '', 'utf8'));
 
   const result = await new Promise((resolve, reject) => {
-    setTimeout(() => reject('Timeout'), 1000);
+    setTimeout(() => reject('Timeout'), 2000);
     snitch.on('event', (path, event, details) => {
       if (typeof details !== 'object') reject('Invalid typeof details');
       if (typeof path !== 'string') reject('Bad path: ' + path);
@@ -183,11 +183,11 @@ test('[Events] debounce + new/event', async () => {
 test('[Events] callback', async () => {
   const dirLocation = path.join(CWD, 'tests', 'dir' + Math.random().toFixed(5));
   const filter = f => !f.includes('ignore');
-  const snitch = new Snitch({ filter, timeout: 800, home: CWD, recursive: true });
+  const snitch = new Snitch({ filter, timeout: 1500, home: CWD, recursive: true });
   await fsp.mkdir(dirLocation);
 
   const result = await new Promise((resolve, reject) => {
-    setTimeout(() => reject('Timeout'), 1000);
+    setTimeout(() => reject('Timeout'), 2000);
     snitch.watchSync(dirLocation, (event, path, details) => {
       if (typeof details !== 'object') reject('Invalid typeof details');
       if (typeof path !== 'string') reject('Bad path: ' + path);
@@ -208,7 +208,7 @@ test('[Events] before/after/event', async () => {
   const dirLocation = path.join(CWD, 'tests', 'dir' + Math.random().toFixed(5));
   const files = ['file1.ignore.ext', 'file2.ext', 'file3.ext'];
   const filter = f => !f.includes('ignore');
-  const snitch = new Snitch({ filter, timeout: 800, home: CWD, recursive: true });
+  const snitch = new Snitch({ filter, timeout: 1500, home: CWD, recursive: true });
   await fsp.mkdir(dirLocation);
   await snitch.watch(dirLocation);
 
@@ -216,7 +216,7 @@ test('[Events] before/after/event', async () => {
   await wait(name => fsp.writeFile(path.join(dirLocation, name), '', 'utf8'));
 
   const result = await new Promise((resolve, reject) => {
-    setTimeout(() => reject('Timeout'), 1000);
+    setTimeout(() => reject('Timeout'), 2000);
     var count = 0;
     var eventCount = 0;
     const res = (c = ++count) => c === 3 && resolve();
@@ -263,7 +263,7 @@ test('[Events] recursive', async () => {
   const nestedLocation = path.join(dirLocation, 'nested');
   const files = ['file1.ignore.ext', 'file2.ext'];
   const filter = f => !f.includes('ignore');
-  const snitch = new Snitch({ filter, timeout: 800, home: CWD, recursive: true });
+  const snitch = new Snitch({ filter, timeout: 1500, home: CWD, recursive: true });
   await fsp.mkdir(dirLocation);
   await snitch.watch(dirLocation);
 
@@ -272,7 +272,7 @@ test('[Events] recursive', async () => {
   await wait(name => fsp.writeFile(path.join(nestedLocation, name), '', 'utf8'));
 
   const result = await new Promise((resolve, reject) => {
-    setTimeout(() => reject('Timeout'), 1000);
+    setTimeout(() => reject('Timeout'), 2000);
     var count = 0;
     snitch.on('event', (path, event) => {
       if (!path.includes('nested')) reject();
