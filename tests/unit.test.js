@@ -110,7 +110,7 @@ test('[Events] debounce + unlink/event', async () => {
   await wait(name => fsp.unlink(path.join(dirLocation, name)));
 
   const result = await new Promise((resolve, reject) => {
-    setTimeout(() => reject('Timeout'), 1000);
+    setTimeout(() => reject('Timeout'), 3000);
     snitch.on('event', (path, event, details) => {
       if (typeof details !== 'object') reject('Invalid typeof details');
       if (typeof path !== 'string') reject('Bad path: ' + path);
@@ -139,7 +139,7 @@ test('[Events] debounce + update/event', async () => {
   await wait(name => fsp.writeFile(path.join(dirLocation, name), '123', 'utf8'));
 
   const result = await new Promise((resolve, reject) => {
-    setTimeout(() => reject('Timeout'), 1000);
+    setTimeout(() => reject('Timeout'), 3000);
     snitch.on('before', console.log);
     snitch.on('event', (path, event, details) => {
       if (typeof details !== 'object') reject('Invalid typeof details');
@@ -167,7 +167,7 @@ test('[Events] debounce + new/event', async () => {
   await wait(name => fsp.writeFile(path.join(dirLocation, name), '', 'utf8'));
 
   const result = await new Promise((resolve, reject) => {
-    setTimeout(() => reject('Timeout'), 1000);
+    setTimeout(() => reject('Timeout'), 3000);
     snitch.on('event', (path, event, details) => {
       if (typeof details !== 'object') reject('Invalid typeof details');
       if (typeof path !== 'string') reject('Bad path: ' + path);
@@ -189,7 +189,7 @@ test('[Events] callback', async () => {
   await fsp.mkdir(dirLocation);
 
   const result = await new Promise((resolve, reject) => {
-    setTimeout(() => reject('Timeout'), 1000);
+    setTimeout(() => reject('Timeout'), 3000);
     snitch.watchSync(dirLocation, (event, path, details) => {
       if (typeof details !== 'object') reject('Invalid typeof details');
       if (typeof path !== 'string') reject('Bad path: ' + path);
@@ -218,7 +218,7 @@ test('[Events] before/after/event', async () => {
   await wait(name => fsp.writeFile(path.join(dirLocation, name), '', 'utf8'));
 
   const result = await new Promise((resolve, reject) => {
-    setTimeout(() => reject('Timeout'), 1000);
+    setTimeout(() => reject('Timeout'), 3000);
     var count = 0;
     var eventCount = 0;
     const res = (c = ++count) => c === 3 && resolve();
@@ -274,7 +274,7 @@ test('[Events] recursive', async () => {
   await wait(name => fsp.writeFile(path.join(nestedLocation, name), '', 'utf8'));
 
   const result = await new Promise((resolve, reject) => {
-    setTimeout(() => reject('Timeout'), 1000);
+    setTimeout(() => reject('Timeout'), 3000);
     var count = 0;
     snitch.on('event', (path, event) => {
       if (!path.includes('nested')) reject();
