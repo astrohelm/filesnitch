@@ -135,6 +135,7 @@ test('[Events] debounce + update/event', async () => {
 
   const wait = async cb => Promise.all(files.map(cb));
   await wait(name => fsp.writeFile(path.join(dirLocation, name), '', 'utf8'));
+  await timers.setTimeout(1000);
   await wait(name => fsp.writeFile(path.join(dirLocation, name), '123', 'utf8'));
 
   const result = await new Promise((resolve, reject) => {
