@@ -98,7 +98,7 @@ test('[Events] debounce + unlink/event', async () => {
   const dirLocation = path.join(CWD, 'tests', 'dir' + Math.random().toFixed(5));
   const files = ['file1.ignore.ext', 'file2.ext'];
   const filter = f => !f.includes('ignore');
-  const snitch = new Snitch({ filter, timeout: 200, home: CWD, recursive: true });
+  const snitch = new Snitch({ filter, timeout: 500, home: CWD, recursive: true });
   await fsp.mkdir(dirLocation);
   await snitch.watch(dirLocation);
 
@@ -127,7 +127,7 @@ test('[Events] debounce + update/event', async () => {
   const dirLocation = path.join(CWD, 'tests', 'dir' + Math.random().toFixed(5));
   const files = ['file1.ignore.ext', 'file2.ext'];
   const filter = f => !f.includes('ignore');
-  const snitch = new Snitch({ filter, timeout: 200, home: CWD, recursive: true });
+  const snitch = new Snitch({ filter, timeout: 500, home: CWD, recursive: true });
   await fsp.mkdir(dirLocation);
   await snitch.watch(dirLocation);
 
@@ -155,7 +155,7 @@ test('[Events] debounce + new/event', async () => {
   const dirLocation = path.join(CWD, 'tests', 'dir' + Math.random().toFixed(5));
   const files = ['file1.ignore.ext', 'file2.ext'];
   const filter = f => !f.includes('ignore');
-  const snitch = new Snitch({ filter, timeout: 200, home: CWD, recursive: true });
+  const snitch = new Snitch({ filter, timeout: 500, home: CWD, recursive: true });
   await fsp.mkdir(dirLocation);
   await snitch.watch(dirLocation);
 
@@ -181,7 +181,7 @@ test('[Events] debounce + new/event', async () => {
 test('[Events] callback', async () => {
   const dirLocation = path.join(CWD, 'tests', 'dir' + Math.random().toFixed(5));
   const filter = f => !f.includes('ignore');
-  const snitch = new Snitch({ filter, timeout: 200, home: CWD, recursive: true });
+  const snitch = new Snitch({ filter, timeout: 500, home: CWD, recursive: true });
   await fsp.mkdir(dirLocation);
 
   const result = await new Promise((resolve, reject) => {
@@ -206,7 +206,7 @@ test('[Events] before/after/event', async () => {
   const dirLocation = path.join(CWD, 'tests', 'dir' + Math.random().toFixed(5));
   const files = ['file1.ignore.ext', 'file2.ext', 'file3.ext'];
   const filter = f => !f.includes('ignore');
-  const snitch = new Snitch({ filter, timeout: 200, home: CWD, recursive: true });
+  const snitch = new Snitch({ filter, timeout: 500, home: CWD, recursive: true });
   await fsp.mkdir(dirLocation);
   await snitch.watch(dirLocation);
 
@@ -261,7 +261,7 @@ test('[Events] recursive', async () => {
   const nestedLocation = path.join(dirLocation, 'nested');
   const files = ['file1.ignore.ext', 'file2.ext'];
   const filter = f => !f.includes('ignore');
-  const snitch = new Snitch({ filter, timeout: 200, home: CWD, recursive: true });
+  const snitch = new Snitch({ filter, timeout: 500, home: CWD, recursive: true });
   await fsp.mkdir(dirLocation);
   await snitch.watch(dirLocation);
 
