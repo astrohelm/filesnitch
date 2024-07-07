@@ -113,7 +113,7 @@ test('[Events] debounce + unlink/event', async () => {
       if (typeof details !== 'object') reject('Invalid typeof details');
       if (typeof path !== 'string') reject('Bad path: ' + path);
       if (path.includes('ignore')) reject('Filter is not working');
-      if (event !== 'unlink') reject('Wrong event: ' + event);
+      if (event !== 'unlink') reject(`Wrong event: [${event}]:\n ${JSON.stringify(details)}`);
       resolve();
     });
   }).then(...[e => [true, e], e => [false, e]]);
@@ -141,7 +141,7 @@ test('[Events] debounce + update/event', async () => {
       if (typeof details !== 'object') reject('Invalid typeof details');
       if (typeof path !== 'string') reject('Bad path: ' + path);
       if (path.includes('ignore')) reject('Filter is not working');
-      if (event !== 'update') reject('Wrong event: ' + event);
+      if (event !== 'update') reject(`Wrong event: [${event}]:\n ${JSON.stringify(details)}`);
       resolve();
     });
   }).then(...[e => [true, e], e => [false, e]]);
@@ -168,7 +168,7 @@ test('[Events] debounce + new/event', async () => {
       if (typeof details !== 'object') reject('Invalid typeof details');
       if (typeof path !== 'string') reject('Bad path: ' + path);
       if (path.includes('ignore')) reject('Filter is not working');
-      if (event !== 'new') reject('Wrong event: ' + event);
+      if (event !== 'new') reject(`Wrong event: [${event}]:\n ${JSON.stringify(details)}`);
       resolve();
     });
   }).then(...[e => [true, e], e => [false, e]]);
@@ -190,7 +190,7 @@ test('[Events] callback', async () => {
       if (typeof details !== 'object') reject('Invalid typeof details');
       if (typeof path !== 'string') reject('Bad path: ' + path);
       if (path.includes('ignore')) reject('Filter is not working');
-      if (event !== 'new') reject('Wrong event: ' + event);
+      if (event !== 'new') reject(`Wrong event: [${event}]:\n ${JSON.stringify(details)}`);
       resolve();
     });
     fsp.writeFile(path.join(dirLocation, 'file1.ignore.ext'), '', 'utf8');
