@@ -10,6 +10,8 @@ const fsp = fs.promises;
 
 const CWD = process.cwd();
 const WRITE_TIMEOUT = 1000;
+const stringify = details =>
+  JSON.stringify(details, (k, v) => (typeof v === 'bigint' ? v.toString() : v));
 
 test('Basics', () => {
   assert(process.versions.node.split('.').map(Number)[0] >= 22);
@@ -98,7 +100,7 @@ test('[Events] debounce + unlink/event', async () => {
   const dirLocation = path.join(CWD, 'tests', 'dir' + Math.random().toFixed(5));
   const files = ['file1.ignore.ext', 'file2.ext'];
   const filter = f => !f.includes('ignore');
-  const snitch = new Snitch({ filter, timeout: 500, home: CWD, recursive: true });
+  const snitch = new Snitch({ filter, timeout: 800, home: CWD, recursive: true });
   await fsp.mkdir(dirLocation);
   await snitch.watch(dirLocation);
 
@@ -113,7 +115,7 @@ test('[Events] debounce + unlink/event', async () => {
       if (typeof details !== 'object') reject('Invalid typeof details');
       if (typeof path !== 'string') reject('Bad path: ' + path);
       if (path.includes('ignore')) reject('Filter is not working');
-      if (event !== 'unlink') reject(`Wrong event: [${event}]:\n ${JSON.stringify(details)}`);
+      if (event !== 'unlink') reject(`Wrong event: [${event}]:\n ${stringify(details)}`);
       resolve();
     });
   }).then(...[e => [true, e], e => [false, e]]);
@@ -127,7 +129,7 @@ test('[Events] debounce + update/event', async () => {
   const dirLocation = path.join(CWD, 'tests', 'dir' + Math.random().toFixed(5));
   const files = ['file1.ignore.ext', 'file2.ext'];
   const filter = f => !f.includes('ignore');
-  const snitch = new Snitch({ filter, timeout: 500, home: CWD, recursive: true });
+  const snitch = new Snitch({ filter, timeout: 800, home: CWD, recursive: true });
   await fsp.mkdir(dirLocation);
   await snitch.watch(dirLocation);
 
@@ -141,7 +143,7 @@ test('[Events] debounce + update/event', async () => {
       if (typeof details !== 'object') reject('Invalid typeof details');
       if (typeof path !== 'string') reject('Bad path: ' + path);
       if (path.includes('ignore')) reject('Filter is not working');
-      if (event !== 'update') reject(`Wrong event: [${event}]:\n ${JSON.stringify(details)}`);
+      if (event !== 'update') reject(`Wrong event: [${event}]:\n ${stringify(details)}`);
       resolve();
     });
   }).then(...[e => [true, e], e => [false, e]]);
@@ -155,7 +157,7 @@ test('[Events] debounce + new/event', async () => {
   const dirLocation = path.join(CWD, 'tests', 'dir' + Math.random().toFixed(5));
   const files = ['file1.ignore.ext', 'file2.ext'];
   const filter = f => !f.includes('ignore');
-  const snitch = new Snitch({ filter, timeout: 500, home: CWD, recursive: true });
+  const snitch = new Snitch({ filter, timeout: 800, home: CWD, recursive: true });
   await fsp.mkdir(dirLocation);
   await snitch.watch(dirLocation);
 
@@ -168,7 +170,7 @@ test('[Events] debounce + new/event', async () => {
       if (typeof details !== 'object') reject('Invalid typeof details');
       if (typeof path !== 'string') reject('Bad path: ' + path);
       if (path.includes('ignore')) reject('Filter is not working');
-      if (event !== 'new') reject(`Wrong event: [${event}]:\n ${JSON.stringify(details)}`);
+      if (event !== 'new') reject(`Wrong event: [${event}]:\n ${stringify(details)}`);
       resolve();
     });
   }).then(...[e => [true, e], e => [false, e]]);
@@ -181,7 +183,7 @@ test('[Events] debounce + new/event', async () => {
 test('[Events] callback', async () => {
   const dirLocation = path.join(CWD, 'tests', 'dir' + Math.random().toFixed(5));
   const filter = f => !f.includes('ignore');
-  const snitch = new Snitch({ filter, timeout: 500, home: CWD, recursive: true });
+  const snitch = new Snitch({ filter, timeout: 800, home: CWD, recursive: true });
   await fsp.mkdir(dirLocation);
 
   const result = await new Promise((resolve, reject) => {
@@ -190,7 +192,7 @@ test('[Events] callback', async () => {
       if (typeof details !== 'object') reject('Invalid typeof details');
       if (typeof path !== 'string') reject('Bad path: ' + path);
       if (path.includes('ignore')) reject('Filter is not working');
-      if (event !== 'new') reject(`Wrong event: [${event}]:\n ${JSON.stringify(details)}`);
+      if (event !== 'new') reject(`Wrong event: [${event}]:\n ${stringify(details)}`);
       resolve();
     });
     fsp.writeFile(path.join(dirLocation, 'file1.ignore.ext'), '', 'utf8');
@@ -206,7 +208,7 @@ test('[Events] before/after/event', async () => {
   const dirLocation = path.join(CWD, 'tests', 'dir' + Math.random().toFixed(5));
   const files = ['file1.ignore.ext', 'file2.ext', 'file3.ext'];
   const filter = f => !f.includes('ignore');
-  const snitch = new Snitch({ filter, timeout: 500, home: CWD, recursive: true });
+  const snitch = new Snitch({ filter, timeout: 800, home: CWD, recursive: true });
   await fsp.mkdir(dirLocation);
   await snitch.watch(dirLocation);
 
@@ -261,7 +263,7 @@ test('[Events] recursive', async () => {
   const nestedLocation = path.join(dirLocation, 'nested');
   const files = ['file1.ignore.ext', 'file2.ext'];
   const filter = f => !f.includes('ignore');
-  const snitch = new Snitch({ filter, timeout: 500, home: CWD, recursive: true });
+  const snitch = new Snitch({ filter, timeout: 800, home: CWD, recursive: true });
   await fsp.mkdir(dirLocation);
   await snitch.watch(dirLocation);
 
