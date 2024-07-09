@@ -3,28 +3,32 @@
 const { STATS_OPTS, WATCH_OPTS, REC_WATCH_OPTS, EVENTS, createFilter } = require('./lib/utilities');
 const { ERR_ACCESS_DENIED, ERR_DUPLICATE, ERR_CAN_NOT_OPEN } = require('./lib/utilities');
 const { existsSync, promises: fsp, watch } = require('node:fs');
+const { ERR_UNSUPPORTED } = require('./lib/utilities');
 const { join, sep } = require('node:path');
 
 module.exports = class FSnitch extends require('./lib/scheduler') {
-  static watchSync = (path, options) => new FSnitch(options).watchSync(path);
-  static watch = async (path, options) => new FSnitch(options).watch(path);
+  static watchSync = (path, options, cb) => new FSnitch(options).watchSync(path, cb);
+  static watch = async (path, options, cb) => new FSnitch(options).watch(path, cb);
   static EVENTS = EVENTS;
   #watchers = new Map();
   #home = process.cwd();
   #recursive = true;
   predict;
 
-  constructor({ home, filter, timeout, recursive } = {}) {
-    super(timeout);
-    if (typeof recursive === 'boolean') this.#recursive = recursive;
-    if (typeof home === 'string') this.#home = home;
-    this.predict = createFilter(filter);
+  constructor(options = {}) {
+    super(options?.timeout);
+    if (typeof options !== 'object') throw new TypeError(`${ERR_UNSUPPORTED} 'options'`);
+    if (typeof recursive === 'boolean') this.#recursive = options.recursive;
+    if (typeof home === 'string') this.#home = options.home;
+    this.predict = createFilter(options.filter);
   }
 
   watchSync(path, cb) {
+    if (cb && typeof cb !== 'function') throw new TypeError(`${ERR_UNSUPPORTED} 'callback'`);
+    if (typeof path !== 'string') throw new TypeError(`${ERR_UNSUPPORTED} 'path'`);
     if (this.#watchers.has(path)) throw new Error(ERR_DUPLICATE);
-    if (!this.predict(path)) throw new Error(ERR_ACCESS_DENIED + path);
-    if (!existsSync(path)) throw new Error(ERR_CAN_NOT_OPEN + path);
+    if (!this.predict(path)) throw new Error(`${ERR_ACCESS_DENIED}: ${path}`);
+    if (!existsSync(path)) throw new Error(`${ERR_CAN_NOT_OPEN}: ${path}`);
     const options = this.#recursive ? REC_WATCH_OPTS : WATCH_OPTS;
     const watcher = watch(path, options, this.#listener.bind(this, path, cb));
     this.#watchers.set(path, watcher);
@@ -32,9 +36,11 @@ module.exports = class FSnitch extends require('./lib/scheduler') {
   }
 
   async watch(path, cb) {
-    if (!this.predict(path)) throw new Error(ERR_ACCESS_DENIED + path);
+    if (cb && typeof cb !== 'function') throw new TypeError(`${ERR_UNSUPPORTED} 'callback'`);
+    if (typeof path !== 'string') throw new TypeError(`${ERR_UNSUPPORTED} 'path'`);
+    if (!this.predict(path)) throw new Error(`${ERR_ACCESS_DENIED}: ${path}`);
     const stats = await fsp.stat(path).catch(() => null);
-    if (stats === null) throw new Error(ERR_CAN_NOT_OPEN + path);
+    if (stats === null) throw new Error(`${ERR_CAN_NOT_OPEN}: ${path}`);
     if (this.#watchers.has(path)) throw new Error(ERR_DUPLICATE);
     const options = this.#recursive ? REC_WATCH_OPTS : WATCH_OPTS;
     const watcher = watch(path, options, this.#listener.bind(this, path, cb));
@@ -69,6 +75,7 @@ module.exports = class FSnitch extends require('./lib/scheduler') {
   }
 
   unwatch(path) {
+    if (typeof path !== 'string') throw new TypeError(`${ERR_UNSUPPORTED} 'path'`);
     const watcher = this.#watchers.get(path);
     if (!watcher) return false;
     this.#watchers.delete(path);

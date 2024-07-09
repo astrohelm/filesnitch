@@ -67,7 +67,7 @@ test('Sync watcher', async () => {
   try {
     snitch.watchSync(location);
     assert(true);
-  } catch {
+  } catch (err) {
     assert(false);
   }
 
@@ -135,17 +135,44 @@ test('[Events] debounce + update/event', async () => {
 
   const wait = async cb => Promise.all(files.map(cb));
   await wait(name => fsp.writeFile(path.join(dirLocation, name), '', 'utf8'));
-  await timers.setTimeout(1000);
+  await timers.setTimeout(1000); //? To Escape OS optimization
   await wait(name => fsp.writeFile(path.join(dirLocation, name), '123', 'utf8'));
 
   const result = await new Promise((resolve, reject) => {
     setTimeout(() => reject('Timeout'), 3000);
-    snitch.on('before', console.log);
     snitch.on('event', (path, event, details) => {
       if (typeof details !== 'object') reject('Invalid typeof details');
       if (typeof path !== 'string') reject('Bad path: ' + path);
       if (path.includes('ignore')) reject('Filter is not working');
       if (event !== 'update') reject(`Wrong event: [${event}]:\n ${stringify(details)}`);
+      resolve();
+    });
+  }).then(...[e => [true, e], e => [false, e]]);
+
+  snitch.clear().removeAllListeners();
+  await fsp.rm(dirLocation, { recursive: true, force: true });
+  if (!result[0]) throw new Error(result[1]);
+});
+
+test('[Events] New event > Update event', async () => {
+  const dirLocation = path.join(CWD, 'tests', 'dir' + Math.random().toFixed(5));
+  const files = ['file1.ignore.ext', 'file2.ext'];
+  const filter = f => !f.includes('ignore');
+  const snitch = new Snitch({ filter, timeout: 700, home: CWD, recursive: true });
+  await fsp.mkdir(dirLocation);
+  await snitch.watch(dirLocation);
+
+  const wait = async cb => Promise.all(files.map(cb));
+  await wait(name => fsp.writeFile(path.join(dirLocation, name), '', 'utf8'));
+  await wait(name => fsp.writeFile(path.join(dirLocation, name), '123', 'utf8'));
+
+  const result = await new Promise((resolve, reject) => {
+    setTimeout(() => reject('Timeout'), 3000);
+    snitch.on('event', (path, event, details) => {
+      if (typeof details !== 'object') reject('Invalid typeof details');
+      if (typeof path !== 'string') reject('Bad path: ' + path);
+      if (path.includes('ignore')) reject('Filter is not working');
+      if (event !== 'new') reject(`Wrong event: [${event}]:\n ${stringify(details)}`);
       resolve();
     });
   }).then(...[e => [true, e], e => [false, e]]);

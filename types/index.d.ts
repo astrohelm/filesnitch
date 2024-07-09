@@ -51,12 +51,12 @@ export = class FSnitch extends EventEmitter {
    * @example <caption>Allow you to watch file and directories, with ASYNC start</caption>
    * Snitch.watch('./tests').catch(() => console.log('Trouble with watcher opening'));
    */
-  static async watch(path: string, options?: Options, cb: CallBack): Promise<Watcher>;
+  static async watch(path: string, options?: Options, callback: CallBack): Promise<Watcher>;
   /**
    * @example <caption>Allow you to watch file and directories, with SYNC start</caption>
    * Snitch.watchSync('./tests').watchSync('./somefile.js');
    */
-  static watchSync(path: string, options?: Options, cb: CallBack): Watcher;
+  static watchSync(path: string, options?: Options, callback: CallBack): Watcher;
   /**
    * @example <caption>Allow you to watch file and directories, with SYNC start</caption>
    * const snitch = new Snitch();
@@ -68,14 +68,14 @@ export = class FSnitch extends EventEmitter {
    *   console.log('Trouble with watcher opening')
    * }
    */
-  watchSync(path: string, cb: CallBack): Watcher;
+  watchSync(path: string, callback: CallBack): Watcher;
   /**
    * @example <caption>Allow you to watch file and directories, with ASYNC start</caption>
    * const snitch = new Snitch();
    * snitch.watch('./tests').catch(() => console.log('Trouble with watcher opening'));
    * snitch.watch('./somefile.js').then(() => console.log('OK'));
    */
-  async watch(path: string, cb: CallBack): Promise<Watcher>;
+  async watch(path: string, callback: CallBack): Promise<Watcher>;
   /**
    * @description Remove route from observation
    * @example <caption>Useful when you need to watch only a period of time</caption>
