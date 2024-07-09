@@ -4,10 +4,12 @@
 
 ## [2.1.0][] - 2024-07-09
 
-- No more unnecessary logs
-- Implemented NEW event OS optimization
-- Static methods callbacks fix
-- Method parameters assertion
+- No more unnecessary logs.
+- Implemented NEW event OS optimization.
+- Static methods callbacks fix.
+- Method parameters assertion.
+- Rewritten tests.
+- Types fixes.
 
 ## [2.0.0][] - 2024-07-07
 
