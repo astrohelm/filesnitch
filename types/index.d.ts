@@ -46,17 +46,31 @@ export = class FSnitch extends EventEmitter {
    * snitch.on('change', package => console.log(package)); // STDOUT: '/tests'
    * snitch.on('after', package => console.log(package)); //  STDOUT:[['/tests', 'change']]
    */
-  on(event: Events, handler: (...args: any[]) => void): EventEmitter;
+  on(event: Events, handler: (...args: any[]) => void): FSnitch;
+  static EVENTS: {
+    NEW: string;
+    UNLINK: string;
+    UPDATE: string;
+
+    BEFORE_DROP: string;
+    AFTER_DROP: string;
+
+    EVENT: string;
+    READY: string;
+    CLOSE: string;
+    ERROR: string;
+  };
+
   /**
    * @example <caption>Allow you to watch file and directories, with ASYNC start</caption>
    * Snitch.watch('./tests').catch(() => console.log('Trouble with watcher opening'));
    */
-  static async watch(path: string, options?: Options, cb: CallBack): Promise<Watcher>;
+  static async watch(path: string, options?: Options, callback: CallBack): Promise<FSnitch>;
   /**
    * @example <caption>Allow you to watch file and directories, with SYNC start</caption>
    * Snitch.watchSync('./tests').watchSync('./somefile.js');
    */
-  static watchSync(path: string, options?: Options, cb: CallBack): Watcher;
+  static watchSync(path: string, options?: Options, callback: CallBack): FSnitch;
   /**
    * @example <caption>Allow you to watch file and directories, with SYNC start</caption>
    * const snitch = new Snitch();
@@ -68,14 +82,14 @@ export = class FSnitch extends EventEmitter {
    *   console.log('Trouble with watcher opening')
    * }
    */
-  watchSync(path: string, cb: CallBack): Watcher;
+  watchSync(path: string, callback: CallBack): FSnitch;
   /**
    * @example <caption>Allow you to watch file and directories, with ASYNC start</caption>
    * const snitch = new Snitch();
    * snitch.watch('./tests').catch(() => console.log('Trouble with watcher opening'));
    * snitch.watch('./somefile.js').then(() => console.log('OK'));
    */
-  async watch(path: string, cb: CallBack): Promise<Watcher>;
+  async watch(path: string, callback: CallBack): Promise<FSnitch>;
   /**
    * @description Remove route from observation
    * @example <caption>Useful when you need to watch only a period of time</caption>
@@ -86,7 +100,7 @@ export = class FSnitch extends EventEmitter {
    *    snitch.unwatch('./tests');
    * }, 1000);
    */
-  unwatch(path: string): Watcher;
+  unwatch(path: string): FSnitch;
   /**
    * @description Removes all watchers
    * @example <caption>Useful when you need to restart app</caption>
@@ -96,14 +110,14 @@ export = class FSnitch extends EventEmitter {
    * snitch.clear();
    * snitch.emit('change', 'Hello World!'); // STDOUT: Hello World !
    */
-  clear(): Watcher;
+  clear(): FSnitch;
   /**
    * @description Removes all watchers and flushes all events
    * @example <caption>Useful when you need to restart app</caption>
    * const snitch = new Snitch();
    * snitch.close();
    */
-  close(): Watcher;
+  close(): FSnitch;
   /**
    * @description Reactivates snitch
    * @example <caption>Useful when you need to restart app</caption>
@@ -111,7 +125,7 @@ export = class FSnitch extends EventEmitter {
    * snitch.close();
    * snitch.open();
    */
-  open(): Watcher;
+  open(): FSnitch;
   /**
    * @description Snitch status
    * const snitch = new Snitch();
@@ -137,11 +151,11 @@ export = class FSnitch extends EventEmitter {
   /**
    * @description Hold application from off when any Watcher added. Default state is refed;
    */
-  ref(): Watcher;
+  ref(): FSnitch;
   /**
    * @description Does not hold application from off when any Watcher added. Default state is refed;
    */
-  unref(): Watcher;
+  unref(): FSnitch;
   /**
    * @description Array of paths being watched
    */
