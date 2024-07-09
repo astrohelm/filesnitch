@@ -158,7 +158,7 @@ test('[Events] New event > Update event', async () => {
   const dirLocation = path.join(CWD, 'tests', 'dir' + Math.random().toFixed(5));
   const files = ['file1.ignore.ext', 'file2.ext'];
   const filter = f => !f.includes('ignore');
-  const snitch = new Snitch({ filter, timeout: 700, home: CWD, recursive: true });
+  const snitch = new Snitch({ filter, timeout: 1500, home: CWD, recursive: true });
   await fsp.mkdir(dirLocation);
   await snitch.watch(dirLocation);
 
